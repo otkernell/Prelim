@@ -132,10 +132,7 @@ G
 \end{equation} %ode formulation
 where $D$ is the differential operator $\divv$, and $F$ and $G$ are the vectors $(f,v_h)$ and $(g,w_h)$ respectively. Additionally, we can put \eqref{discretizationfinal} into matrix form, giving us
 \begin{equation}\label{FEcoeffoperator}
-\begin{bmatrix}
-\tilde{M} & -\frac{\Delta t}{2}D^T \\
-\frac{\Delta t}{2}D & M
-\end{bmatrix}
+\mathscr{A}_h
 \begin{bmatrix}
 u^{n+1}_h \\
 p^{n+1}_h
@@ -146,11 +143,39 @@ p^{n+1}_h
 \tilde{G}
 \end{bmatrix}
 \end{equation}
-where $\tilde{F} = -\left(u^n_h, v_h\right) +\frac{\Delta t}{2}\left(p^n_h,\nabla \cdot v_h\right)$ and $\tilde{G} = -\left(p^n_h,w_h\right) - \frac{\Delta t}{2}\left(\nabla \cdot u^n_h,w_h\right)$, which gives our fully discretized system.
-%coercivity proof from may 2 discussion here 
+where
+\begin{equation}\label{discretcoefop}
+\begin{split}
+\mathscr{A}_h &= \begin{bmatrix}
+\tilde{M} & -\frac{\Delta t}{2}D^T \\
+\frac{\Delta t}{2}D & M
+\end{bmatrix},\\
+\tilde{F} &= -\left(u^n_h, v_h\right) +\frac{\Delta t}{2}\left(p^n_h,\nabla \cdot v_h\right), \text{ and }\\
+\tilde{G} &= -\left(p^n_h,w_h\right) - \frac{\Delta t}{2}\left(\nabla \cdot u^n_h,w_h\right),
+\end{split}
+\end{equation} which gives our fully discretized system.
+
+Our matrix $\mathscr{A}_h$ is clearly bounded with bounded inverse. Additionally, we see it is skew, and by stripping off the block diagonal we are left with a skew perturbation of a SPD matrix. Now we must consider its coercivity. Converting our problem to its bilinear form, we have
+\begin{equation}\label{bilinear}
+a((u,p),(v,w)) = (u,v) - k(p, \nabla \cdot v) + k(\nabla \cdot u,w) + (p,w) = a(U,V)
+\end{equation}
+where $U = (u,p)$, $V = (v,w)$, and $k = \frac{\Delta t}{2}$. Following a standard coercivity proof, we see
+\begin{equation}
+a(U,U) = \|u\|^2 + \|p\|^2,
+\end{equation}
+since the middle two terms cancel each other out. However, this only proves coercivity in $(L^2)^2 \times L^2$, which is not what we need.
+By applying Cauchy-Schwarz [] and the Inverse Inequality [] we see
+\begin{equation}
+a(U,V) \leq \|u\|\|v\| + \frac{kC_I}{h}\|p\|\|v\| + \frac{kC_I}{h}\|u\|\|w\| + \|p\|\|w\| \leq \left(2 + \frac{2kC_I}{h}\right)\|U\|\|V\|.
+\end{equation}
+If we fix the time step, the condition number grows. However, if we hold $\delta t * h$ fixed. $\frac{k}{h}$ is order 1 and it is continuous and coercive on $L^2$. As we take bigger time steps we should see growth in iteration count if we use the Riesz map.
+%parameter dependent estimates on l2
+%if we want it robust with k, k can't be tied to h, must be hdiv l2, then we want to tweak hdiv l2 parameters
+%maybe need to add this to preliminary results
+%continuous with constant dependent on delta t
+%need to figure out Hdiv L2
 \section{Preconditioning}
 %Need preconditioning intro here
-%here new cn operator
 Returning to the PDE \eqref{acouswave} with coefficients equal to 1, if we apply Crank Nicolson in the time derivative without discretizing in space, \eqref{acouswave} becomes
 \begin{equation}
 \begin{split}
@@ -173,22 +198,15 @@ I && \epsilon\,\gradd \\
 \epsilon\,\divv && I
 \end{pmatrix}
 \end{equation} %need to think about what kind of operator this is and how we can create a robust preconditioner for it
-where $\epsilon = \frac{\Delta t}{2}$.  By discretizing in the finite element space $H_0(\divv) \times L_0^2$, as seen in \eqref{FEcoeffoperator}, we recover our finite dimensional coefficient operator, $\mathscr{A}_h$, defined as
+where $\epsilon = \frac{\Delta t}{2}$.  By discretizing in the finite element space $H_0(\divv) \times L_0^2$, as seen in \eqref{FEcoeffoperator}, we recover our finite dimensional coefficient operator, $\mathscr{A}_h$, defined in \eqref{discretcoefop}.
 %at each timestep we need to invert a discretization of A, we need to figure out what the right differential operator to use as a preconditioner is, and discretize it
-\begin{equation}
-\mathscr{A}_h = \begin{bmatrix}
-\tilde{M} & -\frac{\Delta t}{2}D^T \\
-\frac{\Delta t}{2}D & M
-\end{bmatrix}
-\end{equation}
-%This is a standard preconditioning approach utilizing the Riesz map derived from the problem's spaces. 
 %Need Brezzi conditions here with inf sup condition possibly
 %Should I provide analysis on A here?
 %schur complement - 0517 notes
 %A is elliptic
 We claim $\mathscr{A}$ is an isomorphism mapping  $H(\divv) \times L^2$ onto $H(\divv)^*\times L^2$, its dual space. Additionally, it is bounded on $H(\divv) \times L^2$ with bounded inverse. In the view of [] a common approach to preconditioning is to create an equivalent operator that is easier to invert. Equivalent in this sense means that $\mathscr{B}^{-1}\mathscr{A}$ is a nice operator from the initial space into itself rather than into its dual, where $\mathscr{B}$ is the preconditioner. If $\mathscr{B}^{-1}\mathscr{A}$ is bounded in the Hilbert space, we get mesh independent eigenvalue clustering []. Our goal is to find a preconditioner $\mathscr{B}$ which maps $H(\divv)^* \times L^2$ onto $H(\divv) \times L^2$. This preconditioner will be explored below. However, we can also formulate this problem in an alternative way to be on the space $L^2 \times H^1$. This method is based on the Schur complement. %struggling here
 Instead, we can implement hybridization to provide our solution. We will compare this to our explored method in a later section.
-%The Riesz map gets rid of mesh dependence but not parameter dependence??. [m/w] Want to adjust B so it is still easy to invert but the bounds on B^-1A are as independent of eps as we can make them. 
+%The Riesz map gets rid of mesh dependence but not parameter dependence??. [mard/win] Want to adjust B so it is still easy to invert but the bounds on B^-1A are as independent of eps as we can make them. 
 %riesz map gets rid of the mesh dependence but not the parameter dependence - kirby
 %we want to adjust beta so that B remains easy to invert but the bounds on B^-1A are as independent of eps as possible. then we give an equivalent riesz map that defines a topology in which the preconditioned system has parameter independent bounds
 %examples go here/citations - parameter robust preconditioners
@@ -197,9 +215,8 @@ Instead, we can implement hybridization to provide our solution. We will compare
  %two different solves: operator interpreted in 2 ways: hdiv l2 - ams (ours), l2 h1 - not actually building preconditioner - hybridize - come up with h1 discretization, sym pos def for a finite element space that lives on the edges - look at paper - equivalence between hybrid mixed and nonconforming - crouseix raviart, only continuous at edge midpoints, can plan h1 on tv (brenner and scott)
 
 %like to get eigenvalue bounds when we go beyond this into the next?
-%expand
 
-From methods described in Mardal/Winther, we want our preconditioner to be a block diagonal operator suggested by the mapping properties of the coefficient operator of the system. The canonical preconditioner for our specific coefficient operator $\mathscr{A}$ is derived from the spaces it maps and is as follows:
+From methods described in Mardal/Winther, we want our preconditioner to be a block diagonal operator suggested by the mapping properties of the coefficient operator of the system. The canonical preconditioner for our specific coefficient operator $\mathscr{A}$ utilizes the Riesz map and is derived from the problem's spaces as seen below
 \begin{equation}
 \mathscr{B}=\begin{bmatrix}
  \beta\, I -\alpha\,\gradd\,\divv& 0 \\
@@ -253,7 +270,7 @@ In regards to implementation, we are developing $H(\divv)$ preconditioners in Fi
 \section{Theorems}
 \section{Preliminary Results}
 Once the appropriate Riesz map preconditioner was determined for the coefficient operator in \eqref{coeffoperator}, we were able to write script in Firedrake to test some preliminary results. Using Hypre AMS, we implemented the canonical preconditioner. We compare the basic Riesz map versus hybridzation with a fixed ratio between the time step and mesh size.
-
+%What is hypreAMS?
 \begin{table}[h!]
 	\begin{center}
 		\caption{Riesz Map with HypreAMS}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  22 MAY 2018 12:31
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  23 MAY 2018 12:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -554,17 +554,21 @@ LaTeX Font Info:    Try loading font information for U+rsfs on input line 36.
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 ) [1
 
-{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-
-LaTeX Warning: Reference `coeffoperator' on page 3 undefined on input line 226.
+{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
 
 
-[3]
-
-LaTeX Warning: Reference `coeffoperator' on page 4 undefined on input line 255.
+LaTeX Warning: Reference `coeffoperator' on page 4 undefined on input line 243.
 
 
-[4] [5] (./ThesisProposal.aux)
+[4]
+
+LaTeX Warning: Reference `coeffoperator' on page 5 undefined on input line 272.
+
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[5] [6] (./ThesisProposal.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -573,13 +577,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 12402 strings out of 493089
- 243725 string characters out of 6134842
- 288353 words of memory out of 5000000
- 15633 multiletter control sequences out of 15000+600000
+ 12404 strings out of 493089
+ 243750 string characters out of 6134842
+ 287371 words of memory out of 5000000
+ 15635 multiletter control sequences out of 15000+600000
  12050 words of font info for 47 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,22n,54p,965b,261s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 55i,22n,54p,965b,265s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -596,10 +600,10 @@ e/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive
 015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/20
 15/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texliv
 e/2015/texmf-dist/fonts/type1/public/rsfs/rsfs10.pfb>
-Output written on ThesisProposal.pdf (5 pages, 176261 bytes).
+Output written on ThesisProposal.pdf (6 pages, 180562 bytes).
 PDF statistics:
- 87 PDF objects out of 1000 (max. 8388607)
- 63 compressed objects within 1 object stream
+ 90 PDF objects out of 1000 (max. 8388607)
+ 65 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
