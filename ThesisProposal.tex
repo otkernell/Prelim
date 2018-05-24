@@ -73,7 +73,7 @@ which leads to our final form
 \end{split}
 \end{equation}
 \begin{remark}
-	It is important to note that $H(\divv):= \{v \in L^2,\: \divv(v) \in L^2\}$ and $H_0(\divv) := \{ v\in H(\divv),\: v \cdot \nu|_{\partial \Omega} = 0 \}$ where $\nu$ is the outward normal.
+	It is important to note that $H(\divv):= \{v \in L^2,\: \divv(v) \in L^2\}$ and $H_0(\divv) := \{ v\in H(\divv),\: v \cdot \nu|_{\partial \Omega} = 0 \}$ where $\nu$ is the outward normal. Also note, $L^2_0$ is the space $L^2$ with zero mean.
 \end{remark}
 The semidiscrete mixed formulation of \eqref{finalformacouswave} is to find $u_h:[0,T] \rightarrow V_h$ and $p_h:[0,T] \rightarrow W_h$ such that
 \begin{equation}\label{semidiscrete}
@@ -198,6 +198,7 @@ I && \epsilon\,\gradd \\
 \epsilon\,\divv && I
 \end{pmatrix}
 \end{equation} %need to think about what kind of operator this is and how we can create a robust preconditioner for it
+%ADD: show/cite bounded with bounded inverse
 where $\epsilon = \frac{\Delta t}{2}$.  By discretizing in the finite element space $H_0(\divv) \times L_0^2$, as seen in \eqref{FEcoeffoperator}, we recover our finite dimensional coefficient operator, $\mathscr{A}_h$, defined in \eqref{discretcoefop}.
 %at each timestep we need to invert a discretization of A, we need to figure out what the right differential operator to use as a preconditioner is, and discretize it
 %Need Brezzi conditions here with inf sup condition possibly
@@ -206,12 +207,11 @@ where $\epsilon = \frac{\Delta t}{2}$.  By discretizing in the finite element sp
 We claim $\mathscr{A}$ is an isomorphism mapping  $H(\divv) \times L^2$ onto $H(\divv)^*\times L^2$, its dual space. Additionally, it is bounded on $H(\divv) \times L^2$ with bounded inverse. In the view of [] a common approach to preconditioning is to create an equivalent operator that is easier to invert. Equivalent in this sense means that $\mathscr{B}^{-1}\mathscr{A}$ is a nice operator from the initial space into itself rather than into its dual, where $\mathscr{B}$ is the preconditioner. If $\mathscr{B}^{-1}\mathscr{A}$ is bounded in the Hilbert space, we get mesh independent eigenvalue clustering []. Our goal is to find a preconditioner $\mathscr{B}$ which maps $H(\divv)^* \times L^2$ onto $H(\divv) \times L^2$. This preconditioner will be explored below. However, we can also formulate this problem in an alternative way to be on the space $L^2 \times H^1$. This method is based on the Schur complement.
 %ADD: schur complement - 0517 notes
 Instead, we can implement hybridization to provide our solution. We will compare this to our explored method in a later section.
-%The Riesz map gets rid of mesh dependence but not parameter dependence??. [mard/win] Want to adjust B so it is still easy to invert but the bounds on B^-1A are as independent of eps as we can make them. 
+%ADD: The Riesz map gets rid of mesh dependence but not parameter dependence - [kirby]. [mard/win] eps is paramter, Want to adjust B so it is still easy to invert but the bounds on B^-1A are as independent of eps as we can make them. 
 %riesz map gets rid of the mesh dependence but not the parameter dependence - kirby
 %we want to adjust beta so that B remains easy to invert but the bounds on B^-1A are as independent of eps as possible. then we give an equivalent riesz map that defines a topology in which the preconditioned system has parameter independent bounds
 %ADD: examples go here/citations - parameter robust preconditioners
 %ADD: jeonghun lee - poroelasticity
-
  %two different solves: operator interpreted in 2 ways: hdiv l2 - ams (ours), l2 h1 - not actually building preconditioner - hybridize - come up with h1 discretization, sym pos def for a finite element space that lives on the edges - look at paper - equivalence between hybrid mixed and nonconforming - crouseix raviart, only continuous at edge midpoints, can plan h1 on tv (brenner and scott)
 
 %like to get eigenvalue bounds when we go beyond this into the next?
