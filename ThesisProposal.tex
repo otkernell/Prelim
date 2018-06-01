@@ -174,6 +174,12 @@ If we fix the time step, the condition number grows. However, if we hold $\delta
 %maybe need to add this to preliminary results
 %continuous with constant dependent on delta t
 %ADD: need to figure out Hdiv L2
+%not going to find bound dependent of timestep for L2 coercivity, could just inverst block diagonal mass matrix which is the Riesz Map Preconditioner in L2
+%L2 riesz not coercive on Hdiv l2, but bounded with bounded inverse
+%Notes 0524 - this is for poisson - finite dimensional so uniqueness implies existence - pick v = u, w = p \implies (u,u) = 0, implies u = 0 - only solution to this system
+%how to get p? if u=0, since divergence is an onto operator, then (p,div v) = 0, therefore there exists a v in Vh such that div v = p, so pick it and thus p = 0 as well. Therefore forevery Vh Wh there exists an unique solution. Now we need a uniform bound on it, how big is u, how big is p
+%||u||^2 = (g,u) imples ||u|| \leq ||g||
+%  part of the inverse is bounded through 
 \section{Preconditioning}
 %ADD: Need preconditioning intro here
 Returning to the PDE \eqref{acouswave} with coefficients equal to 1, if we apply Crank Nicolson in the time derivative without discretizing in space, \eqref{acouswave} becomes
