@@ -57,7 +57,8 @@ Converting this system into weak form, we get
 (p_t, w) + (\nabla \cdot u,w) &= (g,w), \:\:\: w \in L_0^2
 \end{split}
 \end{equation}
-where $u:[0,T] \rightarrow V \equiv H_0(\divv)$ and $p:[0,T] \rightarrow W \equiv L_0^2$, along with the initial conditions \eqref{initialconditions}.
+where $u:[0,T] \rightarrow V \equiv H_0(\divv)$ and $p:[0,T] \rightarrow W \equiv L_0^2$, %solved zero mean issue
+ along with the initial conditions \eqref{initialconditions}.
 When we integrate by parts \eqref{weakformacouswave} changes to 
 \begin{equation}
 \begin{split}
@@ -83,7 +84,8 @@ The semidiscrete mixed formulation of \eqref{finalformacouswave} is to find $u_h
 \end{split}
 \end{equation}
 for all $v_h \in V_h$ and $w_h \in W_h$ where $V_h \subset V$ and $W_h \subset W$.
-By discretizing \eqref{semidiscrete} with Crank Nicolson and partitioning the time interval $[0,T]$ into timesteps $0 \equiv t_0 8< t_1 < t_2 < ... < t_N$, where $t_i = i\Delta t$, we arrive at an approximation of the solution to the semidiscrete mixed formulation. We chose Crank Nicolson primarily because it is exactly energy conserving, but also it provides the benefit of being numerically stable and having improved convergence over explicit methods. Here, $u_h(t_n) \approx u^n_h \in V_h$ and $p_h(t_n) \approx p^n_h \in W_h$
+By discretizing \eqref{semidiscrete} with Crank Nicolson and partitioning the time interval $[0,T]$ into timesteps $0 \equiv t_0 < t_1 < t_2 < ... < t_N$, where $t_i = i\Delta t$,%this technically isn't right, since the delta t's are all different sizes. Should I specify this, or is it commonplace enough that it's understood?[]
+ we arrive at an approximation of the solution to the semidiscrete mixed formulation. We chose Crank Nicolson primarily because it is exactly energy conserving, but also it provides the benefit of being numerically stable and having improved convergence over explicit methods. Here, $u_h(t_n) \approx u^n_h \in V_h$ and $p_h(t_n) \approx p^n_h \in W_h$
 \begin{equation}{\label{cnacoustic}}
 \begin{split}
 \left(\frac{u^{n+1}_h-u^n_h}{\Delta t},v_h\right)-\left(\frac{p^{n+1}_h+p^n_h}{2},\nabla \cdot v_h\right) = \left(f^{n+\frac{1}{2}},v_h\right) \\
@@ -100,10 +102,17 @@ where $f^{n+\frac{1}{2}} = \frac{f(t_{n+1})+f(t_n)}{2}$ and likewise for $g$. Le
 Reshuffling terms leads to 
 \begin{equation}\label{discretizationfinal}
 \begin{split}
-\left(u^{n+1}_h,v_h\right) - \frac{\Delta t}{2}\left(p^{n+1}_h, \nabla \cdot v_h\right) &= \left(u^n_h, v_h\right) +\frac{\Delta t}{2}\left(p^n_h,\nabla \cdot v_h\right) \\
-\left(p^{n+1}_h,w_h\right) + \frac{\Delta t}{2}\left(\nabla \cdot u^{n+1}_h,w_h\right) &= \left(p^n_h,w_h\right) - \frac{\Delta t}{2}\left(\nabla \cdot u^n_h,w_h\right)
+\left(u^{n+1}_h,v_h\right) - \frac{\Delta t}{2}\left(p^{n+1}_h, \nabla \cdot v_h\right) &= \tilde{F} \\
+\left(p^{n+1}_h,w_h\right) + \frac{\Delta t}{2}\left(\nabla \cdot u^{n+1}_h,w_h\right) &= \tilde{G}
 \end{split}
 \end{equation}
+where
+\begin{eqnarray}
+\begin{split}
+\tilde{F} &= \left(u^n_h, v_h\right) +\frac{\Delta t}{2}\left(p^n_h,\nabla \cdot v_h\right), \text{ and }\\
+\tilde{G} &= \left(p^n_h,w_h\right) - \frac{\Delta t}{2}\left(\nabla \cdot u^n_h,w_h\right),
+\end{split}
+\end{eqnarray}
  Let $\{\phi_i\}_{i=1}^{|W_h|}$ and $\{\psi_i\}_{i=1}^{|V_h|}$ be bases for $W_h$ and $V_h$ respectively. Then we can define mass matrices  %Symplectic-mixed Kirby
 \begin{equation}
 \begin{split}
@@ -149,13 +158,12 @@ where
 \mathscr{A}_h &= \begin{bmatrix}
 \tilde{M} & -\frac{\Delta t}{2}D^T \\
 \frac{\Delta t}{2}D & M
-\end{bmatrix},\\
-\tilde{F} &= -\left(u^n_h, v_h\right) +\frac{\Delta t}{2}\left(p^n_h,\nabla \cdot v_h\right), \text{ and }\\
-\tilde{G} &= -\left(p^n_h,w_h\right) - \frac{\Delta t}{2}\left(\nabla \cdot u^n_h,w_h\right),
+\end{bmatrix},
 \end{split}
 \end{equation} which gives our fully discretized system.
 
-Our matrix $\mathscr{A}_h$ is clearly bounded with bounded inverse. Additionally, we see it is skew, and by stripping off the block diagonal we are left with a skew perturbation of a SPD matrix. Now we must consider its coercivity. Converting our problem to its bilinear form, we have
+Our matrix $\mathscr{A}_h$ is clearly bounded with bounded inverse. Additionally, we see it is skew, and by stripping off the block diagonal we are left with a skew perturbation of a SPD matrix.  Now we must consider \eqref{discretizationfinal}'s uniqueness and existence. For simplicity's sake, we will drop the superscripts and subscripts. By letting $v = p$ and $w=u$  Another question we must address is the coercivity of \eqref{FEcoeffoperator}. %I have this partially worked out on paper but I'd like to talk about it when we meet next
+ Converting our problem to its bilinear form, we have
 \begin{equation}\label{bilinear}
 a((u,p),(v,w)) = (u,v) - k(p, \nabla \cdot v) + k(\nabla \cdot u,w) + (p,w) = a(U,V)
 \end{equation}
@@ -213,11 +221,10 @@ where $\epsilon = \frac{\Delta t}{2}$.  By discretizing in the finite element sp
 We claim $\mathscr{A}$ is an isomorphism mapping  $H(\divv) \times L^2$ onto $H(\divv)^*\times L^2$, its dual space. Additionally, it is bounded on $H(\divv) \times L^2$ with bounded inverse. In the view of [] a common approach to preconditioning is to create an equivalent operator that is easier to invert. Equivalent in this sense means that $\mathscr{B}^{-1}\mathscr{A}$ is a nice operator from the initial space into itself rather than into its dual, where $\mathscr{B}$ is the preconditioner. If $\mathscr{B}^{-1}\mathscr{A}$ is bounded in the Hilbert space, we get mesh independent eigenvalue clustering []. Our goal is to find a preconditioner $\mathscr{B}$ which maps $H(\divv)^* \times L^2$ onto $H(\divv) \times L^2$. This preconditioner will be explored below. However, we can also formulate this problem in an alternative way to be on the space $L^2 \times H^1$. This method is based on the Schur complement.
 %ADD: schur complement - 0517 notes
 Instead, we can implement hybridization to provide our solution. We will compare this to our explored method in a later section.
-%ADD: The Riesz map gets rid of mesh dependence but not parameter dependence - [kirby]. [mard/win] eps is paramter, Want to adjust B so it is still easy to invert but the bounds on B^-1A are as independent of eps as we can make them. 
-%riesz map gets rid of the mesh dependence but not the parameter dependence - kirby
+%ADD: The Riesz map gets rid of mesh dependence but not parameter dependence - [kirby]. [mard/win] eps is paramter, Want to adjust B so it is still easy to invert but the bounds on B^-1A are as independent of eps as we can make them.
 %we want to adjust beta so that B remains easy to invert but the bounds on B^-1A are as independent of eps as possible. then we give an equivalent riesz map that defines a topology in which the preconditioned system has parameter independent bounds
 %ADD: examples go here/citations - parameter robust preconditioners
-%ADD: jeonghun lee - poroelasticity
+%ADD: jeonghun lee - poroelasticity - examples - 
  %two different solves: operator interpreted in 2 ways: hdiv l2 - ams (ours), l2 h1 - not actually building preconditioner - hybridize - come up with h1 discretization, sym pos def for a finite element space that lives on the edges - look at paper - equivalence between hybrid mixed and nonconforming - crouseix raviart, only continuous at edge midpoints, can plan h1 on tv (brenner and scott)
 
 %like to get eigenvalue bounds when we go beyond this into the next?
@@ -246,7 +253,7 @@ Note that our coefficient operator $\mathscr{A}$  is a bounded map with bounded 
 %Mesh independent discretization by applying riesz map (show by kirby paper) but doesn't make it parameter robust.
 %discretizing differential operator with parameters on a fixed mesh. As we change the parameters the hilbert space condition number of problem blow up, coercivity or continuity constants could get bad. Then we are farther from the riesz map.
 %Building scales of spaces, defining the space to be parameter dependent, epsilon in definition of space, so a problem that may be poorly conditioned in respect to epsilon in the plain space, it may be optimally conditioned and independent of the constants in the scaled space. Inverting the riesz map in that space, we are set. Try to find the bound on the eigenvalues. Look at continuity type, infinite dimensional estimates.
- We will use this on the coefficient operator of the system \eqref{coeffoperator} and observe how well it performs. If the preconditioner is easily invertible (using AMS or others), then we have found a good preconditioner for this system.
+ We will use this on the coefficient operator of the system \eqref{FEcoeffoperator} and observe how well it performs. If the preconditioner is easily invertible (using AMS or others), then we have found a good preconditioner for this system.
 
 
 \section{Shallow Water Equations}
