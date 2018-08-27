@@ -43,7 +43,7 @@ u_t + \frac{f}{\epsilon}u^{\perp}+\frac{\beta}{\epsilon^2}\nabla(\eta - \eta')+g
 \eta_t + \nabla \cdot (Hu) &= 0,
 \end{split}
 \end{equation}
-where $u$ is the nondimensional two dimensional velocity field tangent to $\Omega$, $u^\perp = (-u_2,u_1)$ is the velocity rotated by $\pi/2$, $\eta$ is the nondimensional free surface elevation above the height at state of rest, $\nabla\eta'$ is the (spatially varying) tidal forcing, $\epsilon$ is the Rossby number (which is small for global tides), $f$ is the spatially-dependent non-dimensional Coriolis parameter which is equal to the sine of the latitude (or which can be approximated by a linear or constant profile for local area models), $\beta$ is the Burger number (which is also small), $H$ is the (spatially varying) nondimensional fluid depth at rest, and $\nabla$ and $\nabla \cdot$ are the intrinsic gradient and divergence operators on $\Omega$, respectively. However, in order to do this, we will start from the basic acoustic wave equation.
+where $u$ is the non-dimensional two dimensional velocity field tangent to $\Omega$, $u^\perp = (-u_2,u_1)$ is the velocity rotated by $\pi/2$, $\eta$ is the non-dimensional free surface elevation above the height at state of rest, $\nabla\eta'$ is the (spatially varying) tidal forcing, $\epsilon$ is the Rossby number (which is small for global tides), $f$ is the spatially-dependent non-dimensional Coriolis parameter which is equal to the sine of the latitude (or which can be approximated by a linear or constant profile for local area models), $\beta$ is the Burger number (which is also small), $H$ is the (spatially varying) nondimensional fluid depth at rest, $g(u)$ is the monotonic damping function, and $\nabla$ and $\nabla \cdot$ are the intrinsic gradient and divergence operators on $\Omega$, respectively. However, in order to do this, we will start from the basic acoustic wave equation.
 \begin{equation}{\label{acouswave}}
 \begin{split}
 qu_t + \nabla p &= 0, \\
@@ -54,7 +54,7 @@ on some domain $\Omega \times [0,T] \subset \R^d \times \R$ with $d = 2,3,$ with
 \begin{remark}
 	It is important to note that $H(\divv):= \{v \in L^2,\: \divv(v) \in L^2\}$ and $H_0(\divv) := \{ v\in H(\divv),\: v \cdot \nu|_{\partial \Omega} = 0 \}$ where $\nu$ is the outward normal. Also note, $L^2_0$ is the space $L^2$ with zero mean.
 \end{remark}
-For now, we will assume $q = 1 = k$. Additionally, we impose the boundary condition $u \cdot \nu = 0$ on $\partial\Omega$ where $\nu$ is the unit outward to $\Omega$. We choose initial conditions
+For now, we will assume $q = 1 = k$. Additionally, we impose the boundary condition $u \cdot \nu = 0$ on $\partial\Omega$ where $\nu$ is the unit outward normal to $\Omega$. We choose initial conditions
 \begin{equation}\label{initialconditions}
 \begin{split}
 &p(x,0) = p_0(x) \text{ and}\\
@@ -92,7 +92,7 @@ The semidiscrete mixed formulation of \eqref{finalformacouswave} is to find $u_h
 \end{split}
 \end{equation}
 for all $v_h \in V_h$ and $w_h \in W_h$ where $V_h \subset V$ and $W_h \subset W$.
-We can then partition the time interval $[0,T]$ into timesteps $0 \equiv t_0 < t_1 < t_2 < ... < t_N$, where $t_i = i\Delta t$, %this technically isn't right, since the delta t's are all different sizes. Should I specify this, or is it commonplace enough that it's understood?[]
+We can then partition the time interval $[0,T]$ into timesteps $0 \equiv t_0 < t_1 < t_2 < ... < t_N$, where $t_i = i\Delta t$. %FIXME: this technically isn't right, since the delta t's are all different sizes. Should I specify this, or is it commonplace enough that it's understood?[]
 Applying Crank Nicolson then approximates the solution to the semidiscrete mixed formulation \eqref{semidiscrete}. We chose Crank Nicolson primarily because it is exactly energy conserving, but also it provides the benefit of being numerically stable. Here, $u_h(t_n) \approx u^n_h \in V_h$ and $p_h(t_n) \approx p^n_h \in W_h$
 \begin{equation}{\label{cnacoustic}}
 \begin{split}
@@ -118,7 +118,7 @@ where
 \begin{eqnarray}
 \begin{split}
 \tilde{F} &= \left(u^n_h, v_h\right) +\frac{\Delta t}{2}\left(p^n_h,\nabla \cdot v_h\right)+\left(f^{n+\frac{1}{2}},v_h\right), \text{ and }\\
-\tilde{G} &= \left(p^n_h,w_h\right) - \frac{\Delta t}{2}\left(\nabla \cdot u^n_h,w_h\right)+\left(g^{n+\frac{1}{2}},w_h\right),
+\tilde{G} &= \left(p^n_h,w_h\right) - \frac{\Delta t}{2}\left(\nabla \cdot u^n_h,w_h\right)+\left(g^{n+\frac{1}{2}},w_h\right).
 \end{split}
 \end{eqnarray}
  Let $\{\phi_i\}_{i=1}^{|W_h|}$ and $\{\psi_i\}_{i=1}^{|V_h|}$ be bases for $W_h$ and $V_h$ respectively. Then we can define mass matrices  %Symplectic-mixed Kirby
@@ -174,7 +174,10 @@ where
 \end{split}
 \end{equation} which gives our fully discretized system.
 
-We want to show our matrix $\mathscr{A}_h$ is bounded and invertible. Additionally, we will investigate this question: As the mesh is refined, will the scale of inverse matrices be uniformly bounded in norm? We see that by stripping off the block diagonal we are left with a skew perturbation of a SPD matrix. Now we must consider \eqref{discretizationfinal}'s uniqueness and existence. For simplicity's sake, we will drop the superscripts and subscripts. By letting $v = p$ and $w=u$  Another question we must address is the coercivity of \eqref{FEcoeffoperator}. %I have this partially worked out on paper but I'd like to talk about it when we meet next
+We want to show our matrix $\mathscr{A}_h$ is bounded and invertible. Additionally, we will investigate this question: As the mesh is refined, will the scale of inverse matrices be uniformly bounded in norm? We see that by stripping off the block diagonal we are left with a skew perturbation of a SPD matrix.
+%Now we must consider \eqref{discretizationfinal}'s uniqueness and existence. For simplicity's sake, we will drop the superscripts and subscripts. %By letting $v = p$ and $w=u$
+%FIXME: Not sure what happened to part of the above paragraph
+Another question we must address is the coercivity of \eqref{FEcoeffoperator}. %I have this partially worked out on paper but I'd like to talk about it when we meet next
 Looking at \eqref{discretizationfinal}, we can view that system of two bilinear forms as a bilinear form on the cartesian product, test and trial are pairs. 
 \begin{equation}\label{bilinear}
 a((u,p),(v,w)) = (u_h^{n+1},v_h) - k(p_h^{n+1}, \nabla \cdot v_h) + k(\nabla \cdot u_h^{n+1},w_h) + (p_h^{n+1},w_h) = a(U,V),
@@ -252,7 +255,7 @@ From methods described in Mardal/Winther, we want our preconditioner to be a blo
 0 & \gamma\, I
 \end{bmatrix}.
 \end{equation}
-Here, if $\alpha = \beta = \gamma = 1$, $\mathscr{B}$ is the canonical Riesz map preconditioner, that maps the dual space back to our original space. %bounded operator with bounded inverse on H(div) times L2
+Here, if $\alpha = \beta = \gamma = 1$, $\mathscr{B}$ is the canonical Riesz map preconditioner that maps the dual space back to our original space. %bounded operator with bounded inverse on H(div) times L2
 %ADD: (Need to talk about stable finite element discretizations and stability following from inf/sup condition).
 Similarly, the discrete preconditioner is of the form
 \begin{equation}
@@ -261,7 +264,7 @@ Similarly, the discrete preconditioner is of the form
 0 & \gamma(\cdot, \cdot)
 \end{bmatrix}.
 \end{equation}
-For this preconditioner, our goal is to look at the eigenvalues of $B_h^{-1}A_h$ as a function of $\alpha$, $\beta$, and $\gamma$. We want to choose these parameters so that our preconditioner is robust in terms of $\Delta t$ and $h$, thus eliminating the dependence on $\epsilon$. First of all, we plan on proving a theorem about the boundedness of this preconditioner and its inverse. Next, we hope to show how the condition number varying with respect to $\Delta t$, $\alpha$, $\beta$, and $\gamma$. Lastly, we will prove a theorem showing that with the correct choice of $\alpha$, $\beta$, and $\gamma$, we can control the condition number so it is of order 1.
+For this preconditioner, our goal is to look at the eigenvalues of $B_h^{-1}A_h$ as a function of $\alpha$, $\beta$, and $\gamma$. We want to choose these parameters so that our preconditioner is robust in terms of $\Delta t$ and $h$, thus eliminating the dependence on $\epsilon$. First of all, we plan on proving a theorem about the boundedness of this preconditioner and its inverse. Next, we hope to show how the condition number varies with respect to $\Delta t$, $\alpha$, $\beta$, and $\gamma$. Lastly, we will prove a theorem showing that with the correct choice of $\alpha$, $\beta$, and $\gamma$, we can control the condition number so it is of order 1.
 %think about the schur compliment - wrong way - other riesz map - a bit of diffusion coeff in each off diagonal entry 
 %should think about what is the hdiv - 2nd order hdiv operator it's trying to discretize - What is the schur compliment eliminating p? - probably grad of div
 %doing that tells us its a 2nd order thing - gives us exactly what we need to do
@@ -290,10 +293,11 @@ What are the bounds on the eigenvalues of the preconditioner?
 Do they behave well with respect to the parameters?
 Do we have a mesh independent eigenvalue bound?
 In regards to implementation, we are developing $H(\divv)$ preconditioners in Firedrake. Both our code development and numerical results will be using Firedrake and PETSc.
-\section{Theorems}
+%\section{Theorems}
 \section{Preliminary Results}
 Once the appropriate Riesz map preconditioner was determined for the coefficient operator in \eqref{coeffoperator}, we were able to write script in Firedrake to test some preliminary results. Using Hypre AMS, we implemented the canonical preconditioner. We compare the basic Riesz map versus hybridzation with a fixed ratio between the time step and mesh size.
 %What is hypreAMS?
+\newpage
 \begin{table}[h!]
 	\begin{center}
 		\caption{Riesz Map with HypreAMS}

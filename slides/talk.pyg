@@ -1,0 +1,6 @@
+solver_parameters={
+  'mat_type': 'matfree',
+  'ksp_type': 'gmres',
+  'pc_type': 'python',
+  'pc_python_type': 'HypreAMS'
+}

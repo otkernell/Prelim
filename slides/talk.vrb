@@ -1,0 +1,11 @@
+\frametitle{More parameters}
+Define the Riesz map bilinear form, and then:
+  \begin{minted}[fontsize=\tiny,mathescape]{python}
+solver_parameters={
+  'mat_type': 'matfree',
+  'ksp_type': 'gmres',
+  'pc_type': 'python',
+  'pc_python_type': 'HypreAMS'
+}
+  \end{minted}
+  Iteration counts very strongly with $\tfrac{\Delta t}{h}$.  Work in progress: tweak the Riesz map for parameter robustness.
