@@ -80,6 +80,7 @@
 	\eta_t + \nabla \cdot (Hu) = 0,
 	\end{gather*}
 		\begin{columns}
+		\visible<2->{
 			\begin{column}{0.4\textwidth}
 				{\scriptsize
 					\begin{itemize}
@@ -88,8 +89,9 @@
 						\item $\eta$: nondimensional free surface elevation above the height at a state of rest
 						\item $\nabla \eta'$: spatially varying tidal forcing
 					\end{itemize}
-				}
-			\end{column}
+			}
+			\end{column}}
+		\visible<3->{
 			\begin{column}{0.4\textwidth}
 				{\scriptsize
 					\begin{itemize}
@@ -101,6 +103,7 @@
 					\end{itemize}
 				}
 			\end{column}
+		}
 		\end{columns}
 	\end{block}
 \end{frame}
@@ -169,11 +172,13 @@
 			\left(u^{n+1}_h,v_h\right) - \frac{\Delta t}{2}\left(p^{n+1}_h, \nabla \cdot v_h\right) = \tilde{F}, \\
 			\left(p^{n+1}_h,w_h\right) + \frac{\Delta t}{2}\left(\nabla \cdot u^{n+1}_h,w_h\right) = \tilde{G},
 		\end{gather*}
+		\visible<2->{
 		where
 		\begin{gather*}
 		\tilde{F} = \left(u^n_h, v_h\right) +\frac{\Delta t}{2}\left(p^n_h,\nabla \cdot v_h\right)+\left(f^{n+\frac{1}{2}},v_h\right),\\
 		\tilde{G} = \left(p^n_h,w_h\right) - \frac{\Delta t}{2}\left(\nabla \cdot u^n_h,w_h\right)+\left(g^{n+\frac{1}{2}},w_h\right).
 		\end{gather*}
+		}
 	\end{block}
 \end{frame}
 
@@ -184,6 +189,7 @@
 		M_{ij} = (\phi_j,\phi_i), \\
 		\tilde{M}_{ij} = (\psi_j,\psi_i).
 		\end{gather*}
+		\visible<2->{
 		We can formulate the semidiscrete mixed form as
 		\begin{gather*}
 		\begin{bmatrix}
@@ -204,6 +210,7 @@
 		\end{bmatrix},
 		\end{gather*} %ode formulation
 		where $D_{ij} = (\divv \psi_i, \phi_j),$ is the discrete div operator and $F$ and $G$ are the vectors $(f,v_h)$ and $(g,w_h)$ respectively.
+	}
 	\end{block}
 \end{frame}
 
@@ -239,6 +246,7 @@
 		u^{n+1} + \frac{\Delta t}{2}\nabla p^{n+1} = u^n - \frac{\Delta t}{2}\nabla p^n\\
 		p^{n+1} + \frac{\Delta t}{2}\nabla \cdot u^{n+1} = p^n - \frac{\Delta t}{2}\nabla \cdot u^n.
 		\end{gather*}
+		\visible<2->{
 		Therefore, at each timestep we have a discretization of the coefficient operator $\mathscr{A}$, described as
 		\begin{gather*}
 		\mathscr{A} = \begin{pmatrix}
@@ -246,19 +254,25 @@
 		\epsilon\,\divv && I
 		\end{pmatrix}, \text{ where }\epsilon = \frac{\Delta t}{2}
 		\end{gather*}
+		}
+		\visible<3->{
 		By discretizing in the finite element space $H_0(\divv) \times L_0^2$, we recover our finite dimensional coefficient operator, $\mathscr{A}_h$.
+		}
 	\end{block}
 \end{frame}
 
 \begin{frame}{Preconditioning}
 	\begin{block}{Mardal/Winther}
-		We claim $\mathscr{A}$ is an isomorphism mapping  $H(\divv) \times L^2$ onto $H(\divv)^*\times L^2$, its dual space. Our goal is then to find a preconditioner $\mathscr{B}$ which maps $H(\divv)^* \times L^2$ onto $H(\divv) \times L^2$. From methods described in Mardal/Winther, we want our preconditioner to be a block diagonal operator suggested by the mapping properties of the coefficient operator of the system. The preconditioner for our specific coefficient operator $\mathscr{A}$ utilizes the Riesz map and is derived from the problem's spaces
+		We claim $\mathscr{A}$ is an isomorphism mapping  $H(\divv) \times L^2$ onto $H(\divv)^*\times L^2$, its dual space. Our goal is then to find a preconditioner $\mathscr{B}$ which maps $H(\divv)^* \times L^2$ onto $H(\divv) \times L^2$.
+		\visible<2->{
+		From methods described in Mardal/Winther, we want our preconditioner to be a block diagonal operator suggested by the mapping properties of the coefficient operator of the system. The preconditioner for our specific coefficient operator $\mathscr{A}$ utilizes the Riesz map and is derived from the problem's spaces
 		\begin{gather*}
 		\mathscr{B}=\begin{bmatrix}
 		\beta\, I -\alpha\,\gradd\,\divv& 0 \\
 		0 & \gamma\, I
 		\end{bmatrix}
 		\end{gather*}
+		}
 	\end{block}
 \end{frame}
 
@@ -275,17 +289,24 @@
 	\end{block}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Conjectures}
 	\begin{block}{Conjecture 1}
-		The operator $\mathscr{B}^{-1}\mathscr{A}$ has mesh-independent eigenvalue clustering
+		The operator $\mathscr{B}^{-1}_h\mathscr{A}_h$ has mesh-independent eigenvalue clustering
 	\end{block}
+	\visible<2->{
 	\begin{block}{Conjecture 2}
-		The condition number $\kappa$ of $\mathscr{B}^{-1}\mathscr{A}$ depends on $\Delta t$, $\alpha$, $\beta$, and $\gamma$
+		The condition number $\kappa$ of $\mathscr{B}^{-1}_h\mathscr{A}_h$ depends on $\Delta t$, $\alpha$, $\beta$, and $\gamma$
 	\end{block}
+	}
+	\visible<3->{
 	\begin{block}{Conjecture 3}
 		The correct choice of $\alpha$, $\beta$, and $\gamma$ can force $\kappa$ to be of order 1
 	\end{block}
+	}
 \end{frame}
 
+\begin{frame}{Questions?}
+	Thank you!
+\end{frame}
 
 \end{document}
