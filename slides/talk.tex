@@ -271,16 +271,16 @@
 		0 & \gamma(\cdot, \cdot)
 		\end{bmatrix}.
 		\end{gather*}
-		For this preconditioner, our goal is to look at the eigenvalues of $B_h^{-1}A_h$ as a function of $\alpha$, $\beta$, and $\gamma$. We want to choose these parameters so that our preconditioner is robust in terms of $\Delta t$ and $h$, thus eliminating the dependence on $\epsilon$.
+		For this preconditioner, our goal is to look at the eigenvalues of $\mathscr{B}_h^{-1}\mathscr{A}_h$ as a function of $\alpha$, $\beta$, and $\gamma$. We want to choose these parameters so that our preconditioner is robust in terms of $\Delta t$ and $h$, thus eliminating the dependence on $\epsilon$.
 	\end{block}
 \end{frame}
 
 \begin{frame}
 	\begin{block}{Conjecture 1}
-		The preconditioner $\mathscr{B}$ is bounded with bounded inverse
+		The operator $\mathscr{B}^{-1}\mathscr{A}$ has mesh-independent eigenvalue clustering
 	\end{block}
 	\begin{block}{Conjecture 2}
-		The condition number $\kappa$ of $\mathscr{B}$ depends on $\Delta t$, $\alpha$, $\beta$, and $\gamma$
+		The condition number $\kappa$ of $\mathscr{B}^{-1}\mathscr{A}$ depends on $\Delta t$, $\alpha$, $\beta$, and $\gamma$
 	\end{block}
 	\begin{block}{Conjecture 3}
 		The correct choice of $\alpha$, $\beta$, and $\gamma$ can force $\kappa$ to be of order 1
