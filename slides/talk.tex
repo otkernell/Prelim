@@ -76,7 +76,7 @@
 \begin{frame}{Linearized Rotating Shallow-Water Equations with Damping}
 	\begin{block}{Tide Model}
 	\begin{gather*}
-	u_t + \alert<2->{\frac{f}{\epsilon}u^{\perp}} + \frac{\beta}{\epsilon^2}\nabla(\eta - \alert<2->{\eta'}) + \alert<2->{g(u)} = \alert<2->{F}\\
+	u_t + \alert<4->{\frac{f}{\epsilon}u^{\perp}} + \frac{\beta}{\epsilon^2}\nabla(\eta - \alert<4->{\eta'}) + \alert<4->{g(u)} = \alert<4->{F}\\
 	\eta_t + \nabla \cdot (Hu) = 0,
 	\end{gather*}
 		\begin{columns}
@@ -125,7 +125,7 @@
 			p(x,0) = p_0(x) \\
 			u(x,0) = u_0(x)
 		\end{gather*}
-		with the boundary condition $u*\nu = 0$ on $\partial \Omega$ where $\nu$ is the unit outward normal to $\Omega$
+		with the boundary condition $u \cdot \nu = 0$ on $\partial \Omega$ where $\nu$ is the unit outward normal to $\Omega$
 	\end{block}
 \end{frame}
 
